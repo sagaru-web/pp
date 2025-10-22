@@ -1,0 +1,7 @@
+{
+  "name": "AI Interview Prep",
+  "description": "An AI-powered application to help you prepare for job interviews by generating tailored questions and answers from a job description.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

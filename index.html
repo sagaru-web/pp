@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><style>path{fill:%233b82f6}@media (prefers-color-scheme:dark){path{fill:%2360a5fa}}</style><path d='M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM12 1.5 16.5 6l-1.5 1.5-3-3-3 3L7.5 6 12 1.5ZM1.5 12 6 7.5l1.5 1.5-3 3 3 3-1.5 1.5L1.5 12Zm10.5 10.5L7.5 18l1.5-1.5 3 3 3-3 1.5 1.5-4.5 4.5ZM22.5 12l-4.5 4.5-1.5-1.5 3-3-3-3 1.5-1.5 4.5 4.5Z'/></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Interview Prep & Problem Solver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+            },
+            colors: {
+              'primary': {
+                DEFAULT: 'hsl(204, 86%, 53%)', // sky-500
+                focus: 'hsl(204, 90%, 48%)', // sky-600
+                content: 'hsl(0, 0%, 100%)',
+              },
+              'dark-primary': {
+                DEFAULT: 'hsl(217, 91%, 60%)', // blue-600
+                focus: 'hsl(217, 91%, 65%)', // blue-500
+                content: 'hsl(0, 0%, 100%)',
+              },
+              'base-100': 'hsl(0, 0%, 100%)', // white
+              'base-200': 'hsl(240, 5%, 96%)', // zinc-100
+              'base-300': 'hsl(240, 5%, 88%)', // zinc-200
+              'base-content': 'hsl(240, 6%, 10%)', // zinc-900
+              'dark-base-100': 'hsl(222, 47%, 11%)', // slate-900
+              'dark-base-200': 'hsl(223, 49%, 9%)', // custom darker slate
+              'dark-base-300': 'hsl(215, 28%, 17%)', // slate-800
+              'dark-content': 'hsl(210, 40%, 98%)', // slate-50
+            },
+            keyframes: {
+                'fade-in': {
+                    '0%': { opacity: '0', transform: 'translateY(10px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+                'stagger-in': {
+                    '0%': { opacity: '0', transform: 'translateY(20px) scale(0.98)' },
+                    '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+                },
+                'modal-in': {
+                    '0%': { opacity: '0', transform: 'scale(0.95)' },
+                    '100%': { opacity: '1', transform: 'scale(1)' },
+                },
+            },
+            animation: {
+                'fade-in': 'fade-in 0.5s ease-out forwards',
+                'stagger-in': 'stagger-in 0.5s ease-out forwards',
+                'modal-in': 'modal-in 0.3s ease-out forwards',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.16.0",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "jspdf": "https://aistudiocdn.com/jspdf@^2.5.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+  .dark body {
+    background-color: hsl(223, 49%, 9%); /* dark-base-200 */
+    background-image: radial-gradient(circle at top, hsl(222, 47%, 12%) 0%, hsl(223, 49%, 9%) 70%);
+  }
+  body {
+    background-color: hsl(240, 5%, 96%); /* base-200 (zinc-100) - a clean, warm light gray */
+  }
+  /* Custom style for highlight.js to integrate with the app's theme */
+  pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    background: transparent; /* Inherit the parent's dark background for a seamless look */
+    color: #abb2bf; /* Default text color from atom-one-dark theme */
+  }
+
+  /* --- Global Button & Tooltip Improvements --- */
+  
+  /* Add subtle transitions to all buttons for a more responsive feel */
+  button {
+    transition: all 0.2s ease-in-out;
+  }
+  /* Add a slight lift effect on hover for non-disabled buttons */
+  button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--tw-shadow-md);
+  }
+  /* Settle the button back down on click */
+  button:not(:disabled):active {
+    transform: translateY(0);
+  }
+
+  /* Tooltip Container */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Tooltip Text */
+  .tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    background-color: hsl(240, 6%, 10%); /* base-content */
+    color: hsl(210, 40%, 98%); /* dark-content */
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%; /* Position above the element */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    font-size: 0.75rem;
+    font-weight: 500;
+    pointer-events: none;
+  }
+  
+  /* Tooltip styling for dark mode */
+  .dark .tooltip .tooltip-text {
+    background-color: hsl(210, 40%, 98%);
+    color: hsl(240, 6%, 10%);
+  }
+
+  /* Show the tooltip on hover */
+  .tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px); /* Add a slight lift */
+  }
+</style>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
